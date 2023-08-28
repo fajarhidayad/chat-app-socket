@@ -10,8 +10,15 @@ export const getAllChannels = async (req: Request, res: Response) => {
   });
 };
 
-export const createNewChannel = (req: Request, res: Response) => {
-  res.send("Create new channel");
+export const createNewChannel = async (req: Request, res: Response) => {
+  try {
+    await channelService.createChannel();
+    res.json({
+      message: "Successfully created",
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const updateChannel = (req: Request, res: Response) => {

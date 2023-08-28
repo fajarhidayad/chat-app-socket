@@ -27,3 +27,6 @@ frontend/node_modules
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+*/.env
