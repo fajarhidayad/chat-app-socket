@@ -1,11 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import CustomError from "../helpers/CustomError";
 
-interface ErrorHandlerType extends Error {
-  statusCode?: number;
-  status?: string;
-}
-
 export const errorNotFound = (
   err: CustomError,
   req: Request,
@@ -19,7 +14,7 @@ export const errorNotFound = (
 };
 
 export const errorHandler = (
-  err: ErrorHandlerType,
+  err: CustomError,
   req: Request,
   res: Response,
   next: NextFunction

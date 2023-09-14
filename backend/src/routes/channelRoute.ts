@@ -3,6 +3,7 @@ import {
   createNewChannel,
   deleteChannel,
   getAllChannels,
+  getChannelById,
   updateChannel,
 } from "../controllers/channelController";
 
@@ -13,6 +14,9 @@ router.get("/", getAllChannels);
 
 // Create new channel
 router.post("/", createNewChannel);
+
+// Get channel by id
+router.get("/:channelId", getChannelById);
 
 // Update a channel
 router.put("/:channelId", updateChannel);
