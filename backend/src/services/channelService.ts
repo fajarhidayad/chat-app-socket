@@ -9,12 +9,9 @@ const getAllChannels = async () => {
   }
 };
 
-const createChannel = async () => {
+const createChannel = async (data: IChannel) => {
   try {
-    const channel = new Channel({
-      name: "Hello World",
-      description: "Sample channel",
-    });
+    const channel = new Channel(data);
 
     await channel.save();
   } catch (error) {

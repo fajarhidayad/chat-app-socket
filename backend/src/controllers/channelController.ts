@@ -1,8 +1,14 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import channelService from "../services/channelService";
+import { IChannel, channelSchemaType } from "../models/Channel";
+import CustomError from "../helpers/CustomError";
 
 interface ChannelParams {
   channelId: string;
+}
+
+interface TypedReqBody<T> extends Request {
+  body: T;
 }
 
 export const getAllChannels = async (req: Request, res: Response) => {
@@ -21,17 +27,29 @@ export const getAllChannels = async (req: Request, res: Response) => {
   }
 };
 
-export const createNewChannel = async (req: Request, res: Response) => {
+export const createNewChannel = async (
+  req: TypedReqBody<IChannel>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    await channelService.createChannel();
-    res.json({
-      message: "Successfully created",
-    });
+    const channelInput = req.body;
+
+    if (channelSchemaType.safeParse(channelInput).success) {
+      await channelService.createChannel(channelInput);
+      res.json({
+        message: "Successfully created",
+      });
+    }
+
+    const error = new CustomError(
+      "Some input is blank, fill the required input",
+      400
+    );
+    next(error);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Internal server error",
-    });
+    const err = new CustomError("Internal server error", 500);
+    next(err);
   }
 };
 

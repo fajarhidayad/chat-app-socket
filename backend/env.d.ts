@@ -5,6 +5,7 @@ declare global {
       PORT?: string;
       MONGO_DB_URI: string;
       PRIVATE_KEY: string;
+      MONGO_DB_URI_DEV: string;
     }
   }
 }
