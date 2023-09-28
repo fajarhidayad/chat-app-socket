@@ -1,5 +1,8 @@
-import Sidebar from "./components/Sidebar";
-import { IoSend } from "react-icons/io5";
+import { useState } from 'react';
+import ModalLayout from './components/ModalLayout';
+import Sidebar from './components/Sidebar';
+import { IoSend } from 'react-icons/io5';
+import { useChannelStore } from './store/channelStore';
 
 const ChatBox = () => {
   return (
@@ -24,12 +27,21 @@ const ChatBox = () => {
 };
 
 function App() {
+  const [modal, setModal] = useState(false);
+  const selectedChannel = useChannelStore((state) => state.selectedChannel);
+
   return (
-    <main className="flex h-screen bg-lightgrey">
-      <Sidebar />
+    <main className="flex h-screen bg-lightgrey relative">
+      {modal && <ModalLayout setModalOff={() => setModal(false)} />}
+      <Sidebar setModal={() => setModal(true)} />
+
       <section className="flex-1 flex flex-col">
         <nav className="shadow-md flex justify-between items-center px-8 text-white h-20">
-          <h3 className="font-bold text-lg">Welcome</h3>
+          <h3 className="font-bold text-lg">
+            {selectedChannel
+              ? selectedChannel.name
+              : 'React + Socket.io Chat App'}
+          </h3>
         </nav>
 
         <ul className="flex-1 flex flex-col-reverse text-white px-8 overflow-y-scroll">
