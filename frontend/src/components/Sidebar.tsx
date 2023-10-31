@@ -1,21 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { FaSearch, FaPlus, FaChevronUp, FaChevronLeft } from 'react-icons/fa';
-import { fetchChannel } from '../api/channel';
-import { Channel, useChannelStore } from '../store/channelStore';
 import { useEffect, useState } from 'react';
+import { FaChevronLeft, FaChevronUp, FaPlus, FaSearch } from 'react-icons/fa';
+import { fetchChannels } from '../api/channel';
+import { Channel, useChannelStore } from '../store/channelStore';
+import { useAuthStore } from '../store/authStore';
+import { socket } from '../socket';
 
 const Sidebar = (props: { setModal: () => void }) => {
   const { channels, setChannel, selectedChannel, setSelectedChannel } =
     useChannelStore((state) => state);
+  const user = useAuthStore((state) => state.user);
+
   const { data, isFetched } = useQuery({
-    queryKey: ['channel.getChannels'],
-    queryFn: fetchChannel,
+    queryKey: ['channels'],
+    queryFn: fetchChannels,
   });
 
   useEffect(() => {
     if (isFetched && data) {
       setChannel(data);
-      setSelectedChannel(data[0]);
     }
   }, [isFetched, data, setChannel, setSelectedChannel]);
 
@@ -50,12 +53,12 @@ const Sidebar = (props: { setModal: () => void }) => {
           <h2 className="text-lg font-medium mb-5">{selectedChannel.name}</h2>
           <p className="text-slate-300 mb-10">{selectedChannel.description}</p>
 
-          <h3 className="text-lg font-medium mb-5">Members</h3>
+          {/* <h3 className="text-lg font-medium mb-5">Members</h3>
           <ul className="flex flex-col gap-5">
             <li>
               <p className="text-slate-300">Yuno</p>
             </li>
-          </ul>
+          </ul> */}
         </section>
       )}
 
@@ -63,9 +66,9 @@ const Sidebar = (props: { setModal: () => void }) => {
 
       <div className="mt-auto bg-[#0B090C] px-6 py-3 text-white flex items-center">
         <span className="bg-lightgrey rounded-full h-12 w-12 flex items-center justify-center font-semibold mr-3">
-          W
+          {user.slice(0, 1).toUpperCase()}
         </span>
-        <p>Username</p>
+        <p>{user}</p>
         <button className="ml-auto h-10 w-10 hover:bg-lightgrey flex items-center justify-center rounded-full">
           <FaChevronUp />
         </button>
@@ -104,7 +107,10 @@ const ChannelList = (props: { channels: Channel[] }) => {
           <ChannelItem
             key={item._id}
             channel={item}
-            onClickSelectedChannel={() => setSelectedChannel(item)}
+            onClickSelectedChannel={() => {
+              socket.emit('joinChannel', item.name);
+              setSelectedChannel(item);
+            }}
           />
         ))}
       </ul>

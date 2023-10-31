@@ -4,7 +4,7 @@ import { Channel } from '../store/channelStore';
 const BASE_URL_API = import.meta.env.VITE_APP_BASE_URL;
 const api = axios.create({ baseURL: BASE_URL_API });
 
-export const fetchChannel = async (): Promise<Channel[] | undefined> => {
+export const fetchChannels = async (): Promise<Channel[] | undefined> => {
   try {
     const response = (await api.get('/channel')).data;
     const data = response.data;
@@ -25,7 +25,7 @@ export const createNewChannel = async (channel: {
   return response.data;
 };
 
-export const deletwChannel = async (channelId: string) => {
+export const deleteChannel = async (channelId: string) => {
   try {
     const response = await api.delete(`/channel/${channelId}`);
     return response.data;

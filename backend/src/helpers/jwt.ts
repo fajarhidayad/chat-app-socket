@@ -1,11 +1,11 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export const signToken = (payload: object): string => {
   const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
 
-  const oneWeek = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
+  const oneDay = Math.floor(Date.now() / 1000) + 60 * 60 * 24;
   const token = jwt.sign(payload, PRIVATE_KEY, {
-    expiresIn: oneWeek,
+    expiresIn: oneDay,
   });
   return token;
 };

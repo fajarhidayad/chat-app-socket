@@ -11,7 +11,7 @@ export default function ModalLayout(props: { setModalOff: () => void }) {
     mutationFn: (channel: { name: string; description: string }) =>
       createNewChannel(channel),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['channel.getChannels'] });
+      queryClient.invalidateQueries({ queryKey: ['channels'] });
       props.setModalOff();
     },
   });
