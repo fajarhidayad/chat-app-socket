@@ -1,5 +1,5 @@
 export interface Chat {
-  name: string;
+  sender: string;
   message: string;
-  date: number;
+  timestamp: number | string;
 }

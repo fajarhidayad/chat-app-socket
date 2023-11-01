@@ -1,5 +1,5 @@
-import CustomError from "../helpers/CustomError";
-import Channel, { IChannel } from "../models/Channel";
+import CustomError from '../helpers/CustomError';
+import Channel, { IChannel, IMessage } from '../models/Channel';
 
 const getAllChannels = async () => {
   const channels: IChannel[] = await Channel.find();
@@ -31,10 +31,25 @@ const deleteChannelById = async (channelId: string) => {
   await Channel.findByIdAndDelete(channelId);
 };
 
+const addMessage = async (channelId: string, chat: IMessage) => {
+  const channel = await Channel.findById(channelId);
+
+  if (!channel) {
+    const err = new CustomError(`Channel with id ${channelId} not found`, 404);
+    return { channel, err };
+  }
+
+  channel.chat?.push(chat);
+  await channel.save();
+
+  return { message: 'success', err: null };
+};
+
 export default {
   getAllChannels,
   createChannel,
   deleteChannelById,
   getChannelById,
   updateChannelById,
+  addMessage,
 };

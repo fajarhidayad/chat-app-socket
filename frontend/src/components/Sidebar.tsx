@@ -20,7 +20,7 @@ const Sidebar = (props: { setModal: () => void }) => {
     if (isFetched && data) {
       setChannel(data);
     }
-  }, [isFetched, data, setChannel, setSelectedChannel]);
+  }, [isFetched, data, setChannel]);
 
   return (
     <aside className="bg-darkgrey w-[325px] flex flex-col ">
@@ -108,7 +108,7 @@ const ChannelList = (props: { channels: Channel[] }) => {
             key={item._id}
             channel={item}
             onClickSelectedChannel={() => {
-              socket.emit('joinChannel', item.name);
+              socket.emit('joinChannel', item._id);
               setSelectedChannel(item);
             }}
           />

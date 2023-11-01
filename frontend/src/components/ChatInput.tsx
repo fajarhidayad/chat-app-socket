@@ -1,11 +1,13 @@
 import { IoSend } from 'react-icons/io5';
 import { socket } from '../socket';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { Chat } from '../types/Chat';
 import { useAuthStore } from '../store/authStore';
 import { useChannelStore } from '../store/channelStore';
+import { addMessageToChannel } from '../api/channel';
 
 export default function ChatInput() {
+  const inputRef = useRef<HTMLInputElement>(null);
   const user = useAuthStore((state) => state.user);
   const channel = useChannelStore((state) => state.selectedChannel);
   const [message, setMessage] = useState('');
@@ -15,14 +17,15 @@ export default function ChatInput() {
     if (message === '') return;
     const today = Date.now();
     const newChat: Chat = {
-      name: user,
+      sender: user,
       message,
-      date: today,
+      timestamp: today,
     };
     socket.emit('channelMessage', {
-      channel: channel?.name,
+      channel: channel?._id,
       chat: newChat,
     });
+    addMessageToChannel(channel?._id as string, newChat);
     setMessage('');
   }
 
@@ -34,6 +37,7 @@ export default function ChatInput() {
       >
         <input
           type="text"
+          ref={inputRef}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="bg-transparent focus:outline-none p-2 flex-1 w-full"

@@ -33,3 +33,23 @@ export const deleteChannel = async (channelId: string) => {
     console.error(error);
   }
 };
+
+export const addMessageToChannel = async (
+  channelId: string,
+  chat: { message: string; sender: string }
+) => {
+  const response = await api.post(`/channel/${channelId}`, chat, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  return response.data;
+};
+
+export const getMessagesFromChannel = async (channelId: string) => {
+  try {
+    const response = await api.get(`/channel/${channelId}/messages`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
